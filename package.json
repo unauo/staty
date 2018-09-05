@@ -1,0 +1,14 @@
+{
+  "name": "staty",
+  "version": "1.0.0",
+  "description": "payment form statistic viewer for JotForm",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "unauo",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}
