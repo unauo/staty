@@ -1,25 +1,26 @@
+"use strict";
+
 var express = require('express');
 var app = express();
 
 app.set('view engine', 'ejs');
-
+app.use(express.static('public')); 
 
 app.get('/', function(req, res){
-	//	res.send('this is the homepage');
-	res.sendFile(__dirname + '/htmls/index.html');
+	res.render('index');
 });
 app.get('/stats', function(req, res){
-	//	res.send('this is the homepage');
-	res.sendFile(__dirname + '/htmls/stats.html');
+	res.render('stats');
 });
 app.get('/about', function(req, res){
-	//	res.send('this is the homepage');
-	res.sendFile(__dirname + '/htmls/about.html');
+	res.render('about');
 });
 app.get('/feedback', function(req, res){
-	//	res.send('this is the homepage');
-	res.sendFile(__dirname + '/htmls/feedback.html');
+	res.render('feedback');
 });
-app.use(express.static('public')); 
+
+app.get('/form/:id', function(req, res){
+	res.render('form', {id: req.params.id});
+});
 
 app.listen(3000);

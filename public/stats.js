@@ -13,23 +13,30 @@ function arrayify(rawForms, forms){
 	rawForms.forEach(form => forms.push([form.id, form.title, form.status]));
 }
 
+function getTotalEarned(form, list){
+	JF.getFormSubmissions(form[0], function(res){
+		console.log(res);
+		addFormToList(form);
+	}, onError)
+}
+
 function isPayment(form) {
 	if (form[2] == "DELETED") return false;
 	let questions = [];
-	JF.getFormQuestions(form[0],function (data) {
-		questions = data;
+	JF.getFormQuestions(form[0],function(res) {
+		questions = res;
 		for (var i=1; questions[i]; i++) {
 			if (questions[i].type == "control_payment") {
 				form[3] = true;
-				addFormToList(form, list);
+				getTotalEarned(form);
 			}
 		}
 	}, onError);
 	return false;
 }
 
-function addFormToList(form, list){
-	list.innerHTML +=`<li><a href="https://form.jotform.com/${form[0]}">${form[1]}</a></li>`;
+function addFormToList(form){
+	list.innerHTML +=`<li><a href="/form/${form[0]}">${form[1]}</a></li>`;
 }
 
 window.addEventListener("load", function(){	
