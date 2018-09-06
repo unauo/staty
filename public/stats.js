@@ -5,6 +5,7 @@ var rawForms = [];
 var forms = [];
 var list = document.querySelector('#forms');
 
+
 function onError() {
 	alert("Oops, something went wrong. Please try to log in again.");
 }
@@ -13,10 +14,16 @@ function arrayify(rawForms, forms){
 	rawForms.forEach(form => forms.push([form.id, form.title, form.status]));
 }
 
-function getTotalEarned(form, list){
+function getTotalEarned(form, qid){
 	JF.getFormSubmissions(form[0], function(res){
-		console.log(res);
-		addFormToList(form);
+		let grandTotal = 0.00;
+		for (var i=0; i<res.length; i++) {
+			console.log(res);
+			if (res[i].answers && res[i].answers[qid].answer){
+				grandTotal += parseFloat(JSON.parse(res[i].answers[qid].answer.paymentArray).total);
+			}
+		}
+		addFormToList(form, grandTotal.toFixed(2));
 	}, onError)
 }
 
@@ -28,15 +35,15 @@ function isPayment(form) {
 		for (var i=1; questions[i]; i++) {
 			if (questions[i].type == "control_payment") {
 				form[3] = true;
-				getTotalEarned(form);
+				getTotalEarned(form, i);
 			}
 		}
 	}, onError);
 	return false;
 }
 
-function addFormToList(form){
-	list.innerHTML +=`<li><a href="/form/${form[0]}">${form[1]}</a></li>`;
+function addFormToList(form, total){
+	list.innerHTML +=`<li><a href="/form/${form[0]}">${form[1]}:  </a>This form earned you ${total}!</li>`;
 }
 
 window.addEventListener("load", function(){	
