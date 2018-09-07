@@ -1,0 +1,57 @@
+:root {
+	--main-light: #fa8900;
+	--main-dark: #434343;
+	--main-text: white;
+}
+
+body {
+	background: var(--main-dark);
+	padding: 30px;
+}
+
+#header {
+	margin-top: 40px;
+	color: var(--main-text);
+	font-style: bold;
+	text-align: center;
+}
+
+#note {
+	font-style: italic;
+	color: var(--main-light);
+	margin-top: -10px;
+	margin-left: 100px;
+	text-align: center;
+}
+
+#nav {
+	background-color: var(--main-light);
+	margin-bottom: 40px;
+}
+
+#nav a {
+	color: var(--main-text);
+}
+
+#nav a:hover, a:active {
+	color: var(--main-dark);
+}
+
+h1 {
+	font-size: 48px;
+	letter spacing: 2px;
+}
+
+p {
+	font-size: 16px;
+	color: var(--main-text);
+}
+
+a {
+	color: var(--main-light);
+}
+
+a:hover, a:active{
+	color: var(--main-text);
+}
+

@@ -9,16 +9,9 @@ app.use(express.static('public'));
 app.get('/', function(req, res){
 	res.render('index');
 });
-app.get('/stats', function(req, res){
-	res.render('stats');
+app.get('/myforms', function(req, res){
+	res.render('myforms');
 });
-app.get('/about', function(req, res){
-	res.render('about');
-});
-app.get('/feedback', function(req, res){
-	res.render('feedback');
-});
-
 app.get('/form/:id', function(req, res){
 	res.render('form', {id: req.params.id});
 });

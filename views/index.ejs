@@ -9,52 +9,20 @@
 	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
 	    <!-- extra styling -->
-	    <style type="text/css">
-
-	    	body {
-				background: white;
-				padding: 30px;
-			}
-			h1 {
-				font-size: 48px;
-				letter spacing: 2px;
-				text-align: center;
-			}
-			p {
-				font-size: 16px;
-				text-align: center;
-				margin-top: 30px;
-			}
-			#header {
-				color: orange;
-			}
-			.nav {
-				text-align: center;
-				background-color: orange;
-			}
-			a {
-				color: black;
-			}
-
-
-	    </style>
-		<title>Staty for JotForm</title>
+	    <link rel="stylesheet" href="../styles/base.css">
+		<title>Staty by JotForm</title>
 	</head>
 
 	<body>
+		
+		<% include partials/nav.ejs %>
 
 		<div class= "container">
-			<nav class= "nav">
-				<a class= "nav-link" href="/">home</a>
-				<a class= "nav-link" href="/about">about</a>
-				<a class= "nav-link" href="/feedback">feedback</a>
-			</nav>
+			<h1 id="header">Staty</h1>
+			<p id="note">by JotForm</p>
 		</div>
-
-		<div class= "container" id= "header">
-			<h1>Staty</h1>
-			<p>a stat viewer service for your JotForm forms.</p>
-			<p>cut it out beautiful, take me to the <a href="/stats">stat page</a>.</p>
+		<div class= "container">
+			<p>I am curious already, take me to <a href="/myforms">my forms</a>!</p>
 		</div>
 		
 
