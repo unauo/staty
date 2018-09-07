@@ -7,6 +7,7 @@
 body {
 	background: var(--main-dark);
 	padding: 30px;
+	text-align: justify;
 }
 
 #header {
@@ -20,8 +21,13 @@ body {
 	font-style: italic;
 	color: var(--main-light);
 	margin-top: -10px;
-	margin-left: 100px;
+	margin-right: 60px;
+	margin-left: -10px;
 	text-align: center;
+}
+
+#intro {
+	margin-top: 36px;
 }
 
 #nav {
@@ -35,6 +41,10 @@ body {
 
 #nav a:hover, a:active {
 	color: var(--main-dark);
+}
+
+a .sorter {
+	color: var(--main-light);
 }
 
 h1 {
@@ -53,5 +63,6 @@ a {
 
 a:hover, a:active{
 	color: var(--main-text);
+	text-decoration: none;
 }
 

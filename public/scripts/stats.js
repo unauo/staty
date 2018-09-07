@@ -54,7 +54,6 @@ function getTotalEarned(form, qid){
 	JF.getFormSubmissions(form[0], function(res){
 		let grandTotal = 0.00;
 		for (var i=0; i<res.length; i++) {
-			console.log(res);
 			if (res[i].answers && res[i].answers[qid].answer){
 				grandTotal += parseFloat(JSON.parse(res[i].answers[qid].answer.paymentArray).total);
 			}
@@ -79,12 +78,9 @@ function isPayment(form) {
 }
 
 function addFormToList(form, total){
-	if (total > bestForm[0]) {
-		bestForm[0] = total;
-		bestForm[1] = form;
-	}
-	table.innerHTML +=`<tr>
-			<th scope="row"><a href="/form/${form[0]}">${form[1]}</a></th> 
+	table.innerHTML +=
+			`<tr>
+			<td scope="row"><a href="/form/${form[0]}">${form[1]}</a></td> 
 			<td>${form[2] == "ENABLED" ? "yes" : "no"}</td>
 			<td>${total}</td>
 			</tr>`;

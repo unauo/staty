@@ -20,15 +20,15 @@
 		<div class= "container col-11" id="table" align="left">
 			<p id="best-form"></p>
 			<p id="choose-form">Choose a form you want to see the stats of:</p>
-			<table class="table table-hover table-dark" id="inner-table">
+			<table class="table table-hover table-dark">
 			  <thead>
 			    <tr>
-			      <th scope="col">form name:</th>
-			      <th scope="col">still accepting payments?</th>
-			      <th scope="col">total earnings:</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(0); return false"> ▼ </a> form name:</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(1); return false"> ▼ </a> still accepting payments?</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(2); return false;"> ▼ </a> total earnings:</th>
 			    </tr>
 			  </thead>
-			  <tbody id="table">
+			  <tbody id="inner-table">
 			  </tbody>
 			</table>
 		</div>
@@ -42,8 +42,61 @@
 	    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	    
-		
+	    <script>
+			function sortTableText(n) {
+				var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
+				table = document.querySelector("#inner-table");
+				switching = true;
+				direction = "asc"; 
+
+				while (switching) {
+					switching = false;
+					rows = table.rows;
+
+					for (i = 0; i < (rows.length) - 1; i++) {
+				  		shouldSwitch = false;
+				  		x = rows[i].getElementsByTagName("td")[n];
+				 		y = rows[i + 1].getElementsByTagName("td")[n];
+
+				  		if (direction == "asc") {
+				  			if (x.innerHTML[0] === "<" && x.innerHTML[30] === ">") {
+						  			if (x.innerHTML[31].toLowerCase() > y.innerHTML[31].toLowerCase()) {
+							  		shouldSwitch = true;
+							  		break;
+								}
+					  		}
+							else if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+								shouldSwitch = true;
+							  	break;
+							}
+					  	} 
+					  	else if (direction == "desc") {
+					  		if (x.innerHTML[0] === "<" && x.innerHTML[30] === ">") {
+						  			if (x.innerHTML[31].toLowerCase() < y.innerHTML[31].toLowerCase()) {
+							  		shouldSwitch = true;
+							  		break;
+								}
+					  		}
+							else if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+						  		shouldSwitch = true;
+						  		break;
+							}
+					  	}
+					}
+					if (shouldSwitch) {
+					  	rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+					  	switching = true;
+					  	switchcount ++; 
+					} 
+					else {
+					  	if (switchcount == 0 && direction == "asc") {
+							direction = "desc";
+							switching = true;
+					  	}
+					}
+			  	}
+			}
+		</script>
 	</body>
 </html>
 
