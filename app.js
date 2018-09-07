@@ -15,5 +15,8 @@ app.get('/myforms', function(req, res){
 app.get('/form/:id', function(req, res){
 	res.render('form', {id: req.params.id});
 });
+app.use( function(req, res) {
+    res.status(404).render('404', {title: "Oops!"});
+});
 
 app.listen(3000);

@@ -50,6 +50,7 @@ a .sorter {
 h1 {
 	font-size: 48px;
 	letter spacing: 2px;
+	color: var(--main-text);
 }
 
 p {
