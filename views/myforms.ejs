@@ -55,32 +55,44 @@
 
 					for (i = 0; i < (rows.length) - 1; i++) {
 				  		shouldSwitch = false;
-				  		x = rows[i].getElementsByTagName("td")[n];
-				 		y = rows[i + 1].getElementsByTagName("td")[n];
+				  		x = rows[i].getElementsByTagName("td")[n].innerHTML;
+				 		y = rows[i + 1].getElementsByTagName("td")[n].innerHTML;
 
 				  		if (direction == "asc") {
-				  			if (x.innerHTML[0] === "<" && x.innerHTML[30] === ">") {
-						  			if (x.innerHTML[31].toLowerCase() > y.innerHTML[31].toLowerCase()) {
+				  			if (x[0] === "<" && x[30] === ">") {
+						  			if (x.slice(31).toLowerCase() > y.slice(31).toLowerCase()) {
 							  		shouldSwitch = true;
 							  		break;
 								}
 					  		}
-							else if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-								shouldSwitch = true;
-							  	break;
+					  		else if (x == "yes" || x == "no") {
+								if (x.toLowerCase() > y.toLowerCase()) {
+							  		shouldSwitch = true;
+							  		break;
+					  			}
 							}
+					  		else if (parseFloat(x.split(" ")[0]) > (parseFloat(y.split(" ")[0]))){
+					  			shouldSwitch = true;
+					  			break;
+					  		}
 					  	} 
 					  	else if (direction == "desc") {
-					  		if (x.innerHTML[0] === "<" && x.innerHTML[30] === ">") {
-						  			if (x.innerHTML[31].toLowerCase() < y.innerHTML[31].toLowerCase()) {
+					  		if (x[0] === "<" && x[30] === ">") {
+						  			if (x.slice(31).toLowerCase() < y.slice(31).toLowerCase()) {
 							  		shouldSwitch = true;
 							  		break;
 								}
 					  		}
-							else if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-						  		shouldSwitch = true;
-						  		break;
+					  		else if (x == "yes" || x == "no") {
+					  			if (x.toLowerCase() < y.toLowerCase()) {
+							  		shouldSwitch = true;
+							  		break;
+					  			}
 							}
+					  		else if (parseFloat(x.split(" ")[0]) < (parseFloat(y.split(" ")[0]))){
+					  			shouldSwitch = true;
+					  			break;
+					  		}
 					  	}
 					}
 					if (shouldSwitch) {

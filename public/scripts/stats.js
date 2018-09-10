@@ -53,12 +53,13 @@ function arrayify(rawForms, forms){
 function getTotalEarned(form, qid){
 	JF.getFormSubmissions(form[0], function(res){
 		let grandTotal = 0.00;
+		let currency = JSON.parse(res[0].answers[qid].answer.paymentArray).currency;
 		for (var i=0; i<res.length; i++) {
 			if (res[i].answers && res[i].answers[qid].answer){
 				grandTotal += parseFloat(JSON.parse(res[i].answers[qid].answer.paymentArray).total);
 			}
 		}
-		addFormToList(form, grandTotal.toFixed(2));
+		addFormToList(form, grandTotal.toFixed(2), currency);
 	}, onError)
 }
 
@@ -77,12 +78,12 @@ function isPayment(form) {
 	return false;
 }
 
-function addFormToList(form, total){
+function addFormToList(form, total, currency){
 	table.innerHTML +=
 			`<tr>
 			<td scope="row"><a href="/form/${form[0]}">${form[1]}</a></td> 
 			<td>${form[2] == "ENABLED" ? "yes" : "no"}</td>
-			<td>${total}</td>
+			<td>${total} ${currency}</td>
 			</tr>`;
 }
 
