@@ -17,6 +17,10 @@
 
 		<% include partials/nav.ejs %>
 
+		<div class= "container col-11" id="graph" align="left">
+			<svg id="bar-chart"></svg>
+		</div>
+
 		<div class= "container col-11" id="table" align="left">
 			<p id="best-form"></p>
 			<p id="choose-form">Choose a form you want to see the stats of:</p>
@@ -36,7 +40,10 @@
 		
 
 		<!-- Optional JavaScript -->
+		<script src= "https://d3js.org/d3.v5.min.js"></script>
+
 		<script src= "https://js.jotform.com/JotForm.js"></script>
+		
 		<script src= "../scripts/stats.js"></script>
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -40,14 +40,68 @@ var table = document.querySelector('#inner-table');
 var bestForm = [0,[]];
 var best = document.querySelector('#best-form');
 
+var chartData = []; 
+var ttlsData = [];
 
+var width = 700,
+    barHeight = 25;
+
+var x = d3.scaleLinear()
+    .range([0, 200]);
+
+var chart = d3.select("#bar-chart")
+    .attr("width", width);
 
 function onError() {
-	alert("Oops, something went wrong. Please try to log in again.");
+	alert("Oops, something went wrong, or not.");
 }
 
 function arrayify(rawForms, forms){
 	rawForms.forEach(form => forms.push([form.id, form.title, form.status]));
+}
+
+// we need the index of the first unshown form with the given total earnings. this will be crucial if there are several forms with the same total.
+function findForm(total) {
+	for (let i = 0; i < chartData.length; i ++) {
+		if ((chartData[i].status == 0) && (parseFloat(chartData[i].total) == total)) {
+			chartData[i].status = 1;
+			return i;
+		}
+	}
+}
+
+function updateGraph() {
+	ttlsData = ttlsData.sort(function(a,b) { return a-b; });
+	console.log(d3.max(ttlsData));
+	x.domain([0, d3.max(ttlsData)]);
+	chart.attr("height", barHeight * ttlsData.length);
+	
+	var bar = chart.selectAll("g")
+    	.data(ttlsData)
+    .enter().append("g")
+    	.attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+  	bar.append("rect")
+    	.attr("width", x)
+    	.attr("height", barHeight - 4);
+
+  	bar.append("text")
+      	.attr("x", function(d) { return x(d)+3; })
+      	.attr("y", barHeight / 2)
+      	.attr("dy", ".35em")
+		.text( function(d) { return chartData[findForm(d)].name; });
+}
+
+function addFormToTable(form, total, currency){
+	// we need 2 seperate arrays for data. first array only consists of the total earnings, so that we can sort our data.
+	// second array has the info to be shown for each form. status is -1 if the form is not shown yet. more detail can be found in "findForm(total)".
+	table.innerHTML +=
+			`<tr>
+			<td scope="row"><a href="/form/${form[0]}">${form[1]}</a></td> 
+			<td>${form[2] == "ENABLED" ? "yes" : "no"}</td>
+			<td>${total} ${currency}</td>
+			</tr>`;
+	setTimeout(() => {updateGraph()}, 300);
 }
 
 function getTotalEarned(form, qid){
@@ -59,7 +113,9 @@ function getTotalEarned(form, qid){
 				grandTotal += parseFloat(JSON.parse(res[i].answers[qid].answer.paymentArray).total);
 			}
 		}
-		addFormToList(form, grandTotal.toFixed(2), currency);
+		ttlsData.push(grandTotal);
+		chartData.push({status: 0, name: form[1], total: grandTotal, currency: currency});
+		addFormToTable(form, grandTotal.toFixed(2), currency);
 	}, onError)
 }
 
@@ -78,14 +134,7 @@ function isPayment(form) {
 	return false;
 }
 
-function addFormToList(form, total, currency){
-	table.innerHTML +=
-			`<tr>
-			<td scope="row"><a href="/form/${form[0]}">${form[1]}</a></td> 
-			<td>${form[2] == "ENABLED" ? "yes" : "no"}</td>
-			<td>${total} ${currency}</td>
-			</tr>`;
-}
+
 
 window.addEventListener("load", function(){	
 	// initialize API key

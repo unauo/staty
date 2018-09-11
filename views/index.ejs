@@ -41,18 +41,18 @@
 		<script>
 			window.addEventListener("load", function(){
 				var apiKey;
-				if (localStorage.getItem("apiKey")) {
-					var apiKey = localStorage.getItem("apiKey");
+				if (window.localStorage.getItem("apiKey")) {
+					var apiKey = window.localStorage.getItem("apiKey");
 				}
 				else {
 					JF.login(
 				    	function success(){
 				    		var apiKey = JF.getAPIKey();
 			 	        	console.log(apiKey);
-			 	        	localStorage.setItem("apiKey", apiKey);
+			 	        	window.localStorage.setItem("apiKey", apiKey);
 			 			},
 				        function error(){
-							window.alert("cannot log you in, please refresh your page and try again.");
+							window.alert("oops something went wrong, or not.");
 						}
 			    	);
 				}

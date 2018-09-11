@@ -43,6 +43,14 @@ body {
 	color: var(--main-dark);
 }
 
+#bar-chart g text {
+	fill: var(--main-text);
+}
+
+#bar-chart g rect {
+	fill: var(--main-light);
+}
+
 a .sorter {
 	color: var(--main-light);
 }
