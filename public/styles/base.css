@@ -43,6 +43,11 @@ body {
 	color: var(--main-dark);
 }
 
+#graph {
+	overflow: scroll;
+	margin-top: 50px;
+}
+
 #bar-chart g text {
 	fill: var(--main-text);
 }
@@ -50,6 +55,7 @@ body {
 #bar-chart g rect {
 	fill: var(--main-light);
 }
+
 
 a .sorter {
 	color: var(--main-light);

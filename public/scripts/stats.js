@@ -47,7 +47,7 @@ var width = 700,
     barHeight = 25;
 
 var x = d3.scaleLinear()
-    .range([0, 200]);
+    .range([1, 400]);
 
 var chart = d3.select("#bar-chart")
     .attr("width", width);
@@ -71,15 +71,14 @@ function findForm(total) {
 }
 
 function updateGraph() {
-	ttlsData = ttlsData.sort(function(a,b) { return a-b; });
-	console.log(d3.max(ttlsData));
+	ttlsData = ttlsData.sort(function(a,b) { return b-a; });
 	x.domain([0, d3.max(ttlsData)]);
-	chart.attr("height", barHeight * ttlsData.length);
+	chart.attr("height", barHeight * ttlsData.length + 20);
 	
 	var bar = chart.selectAll("g")
     	.data(ttlsData)
     .enter().append("g")
-    	.attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+    	.attr("transform", function(d, i) { return "translate(5," + (i * barHeight + 5) + ")"; });
 
   	bar.append("rect")
     	.attr("width", x)
@@ -88,8 +87,18 @@ function updateGraph() {
   	bar.append("text")
       	.attr("x", function(d) { return x(d)+3; })
       	.attr("y", barHeight / 2)
-      	.attr("dy", ".35em")
-		.text( function(d) { return chartData[findForm(d)].name; });
+      	.attr("dy", ".20em")
+		.text( function(d) { 
+			let i = findForm(d);
+			return chartData[i].name + " (" + (chartData[i].total).toFixed(2) + " " + chartData[i].currency + ")"; 
+		});
+
+	chart.append("g")
+      	.attr("class", "axis axis--x")
+      	.attr("transform", "translate( 5," + (ttlsData.length * barHeight + 2) + ")")
+      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
+
+
 }
 
 function addFormToTable(form, total, currency){
@@ -115,8 +124,8 @@ function getTotalEarned(form, qid){
 		}
 		ttlsData.push(grandTotal);
 		chartData.push({status: 0, name: form[1], total: grandTotal, currency: currency});
-		addFormToTable(form, grandTotal.toFixed(2), currency);
-	}, onError)
+		addFormToTable(form, grandTotal.toFixed(2), currency)
+	}, onError);
 }
 
 function isPayment(form) {
