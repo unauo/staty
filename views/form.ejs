@@ -17,15 +17,52 @@
 
 		<% include partials/nav.ejs %>
 		
-		<div class= "container col-11">
-			<p>page for the form with the id <%= id %></p>
+		<div id="form-info" class= "container col-11">
 		</div>
 
 		<!-- Optional JavaScript -->
+		<script src= "https://unpkg.com/axios/dist/axios.min.js"></script>
+		
+		<script src= "https://d3js.org/d3.v5.min.js"></script>
+
+		<script src= "../scripts/form.js"></script>
+
+		<script>
+			const formID = <%= id %>;
+			var formInfo = [];
+			window.addEventListener("load", function(){
+				var apiKey;
+				if (window.localStorage.getItem("apiKey")) {
+					var apiKey = window.localStorage.getItem("apiKey");
+				}
+				else {
+					JF.login(
+				    	function success(){
+				    		var apiKey = JF.getAPIKey();
+			 	        	window.localStorage.setItem("apiKey", apiKey);
+			 			},
+				        function error(err){
+				        	console.log(err);
+							window.alert("oops something went wrong, or not.");
+						}
+			    	);
+				}
+				
+				if (setForm(formID)) formInfo = setForm(formID);
+				else window.alert("oops something went wrong, or not.");
+
+				editHeader();
+
+
+			});
+			
+			
+		</script>
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 	    
 		
 	</body>
