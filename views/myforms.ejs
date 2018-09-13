@@ -23,9 +23,11 @@
 			<table class="table table-hover table-dark">
 			  <thead>
 			    <tr>
-				    <th scope="col"> <a href="" onclick="sortTableText(0); return false"> ▼ </a> form name:</th>
-				    <th scope="col"> <a href="" onclick="sortTableText(1); return false"> ▼ </a> still accepting payments?</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(0); return false;"> ▼ </a> form name:</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(1); return false;"> ▼ </a> still accepting payments?</th>
 				    <th scope="col"> <a href="" onclick="sortTableText(2); return false;"> ▼ </a> total earnings:</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(3); return false;"> ▼ </a> payment type:</th>
+				    <th scope="col"> <a href="" onclick="sortTableText(4); return false;"> ▼ </a> payment gateway:</th>
 			    </tr>
 			  </thead>
 			  <tbody id="inner-table">
@@ -53,6 +55,7 @@
 	    <script>
 			function sortTableText(n) {
 				var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
+				var ints = [0,1,2,3,4,5,6,7,8,9];
 				table = document.querySelector("#inner-table");
 				switching = true;
 				direction = "asc"; 
@@ -83,6 +86,10 @@
 					  			shouldSwitch = true;
 					  			break;
 					  		}
+					  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() > y.toLowerCase()) ){
+					  			shouldSwitch = true;
+					  			break;
+					  		}
 					  	} 
 					  	else if (direction == "desc") {
 					  		if (x[0] === "<" && x[30] === ">") {
@@ -98,6 +105,10 @@
 					  			}
 							}
 					  		else if (parseFloat(x.split(" ")[0]) < (parseFloat(y.split(" ")[0]))){
+					  			shouldSwitch = true;
+					  			break;
+					  		}
+					  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() < y.toLowerCase()) ){
 					  			shouldSwitch = true;
 					  			break;
 					  		}

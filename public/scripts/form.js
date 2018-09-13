@@ -16,7 +16,7 @@ function setForm(formID) {
 
 function editHeader() {
 	var title = document.createElement('h2');
-	title.innerHTML = `Statistics for your form: <i>"${formInfo.name}"</i>`;
+	title.innerHTML = `Statistics for your form: <i><a href="https://jotform.com/${formInfo.id}">${formInfo.name}</a></i>`;
 	header.appendChild(title);
 	var total = document.createElement('p');
 	total.innerHTML = `Total earnings from this form: ${formInfo.total.toFixed(2)} ${formInfo.currency}`;
@@ -37,8 +37,5 @@ function getFormQuestions(formID, apiKey) {
   		.catch(function (error) {
     		console.log(error);
   		})
-  		.then(function () {
-  			console.log('hello');
-  		});
 }
 

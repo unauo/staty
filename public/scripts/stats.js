@@ -56,7 +56,106 @@ function onError() {
 	alert('Oops, something went wrong, or not.');
 }
 
-function arrayify(rawForms, forms){
+function findGateway(control) {
+	let gateway;
+	switch(control) {
+		case('control_square'):
+			gateway = 'Square';
+			break;
+		case('control_paypal'):
+			gateway = 'PayPal';
+			break;
+		case('control_wepay'):
+			gateway = 'WePay';
+			break;
+		case('control_authnet'):
+			gateway = 'Authorize.Net';
+			break;
+		case('control_echeck'):
+			gateway = 'eCheck';
+			break;
+		case('control_stripe'):
+			gateway = 'Stripe';
+			break;
+		case('control_stripeACH'):
+			gateway = 'Stripe ACH';
+			break;
+		case('control_sofort'):
+			gateway = 'SOFORT';
+			break;
+		case('control_moneris'):
+			gateway = 'Moneris';
+			break;
+		case('control_payu'):
+			gateway = 'PayU';
+			break;
+		case('control_pagseguro'):
+			gateway = 'PagSeguro';
+			break;
+		case('control_bluesnap'):
+			gateway = 'BlueSnap';
+			break;
+		case('control_paymentwall'):
+			gateway = 'Paymentwall';
+			break;
+		case('control_paypalexpress'):
+			gateway = 'PayPal Express';
+			break;
+		case('control_paypalpro'):
+			gateway = 'PayPal Pro';
+			break;
+		case('control_payjunction'):
+			gateway = 'PayJunction';
+			break;
+		case('control_chargify'):
+			gateway = 'Chargify';
+			break;
+		case('control_bluepay'):
+			gateway = 'BluePay';
+			break;
+		case('control_braintree'):
+			gateway = 'Braintree';
+			break;
+		case('control_2co'):
+			gateway = '2Checkout';
+			break;
+		case('control_cardconnect'):
+			gateway = 'CardConnect';
+			break;
+		case('control_worldpay'):
+			gateway = 'Worldpay';
+			break;
+		case('control_worldpayus'):
+			gateway = 'Worldpay US';
+			break;
+		case('control_eway'):
+			gateway = 'eWAY';
+			break;
+		case('control_firstdata'):
+			gateway = 'First Data';
+			break;
+		case('control_paysafe'):
+			gateway = 'Paysafe';
+			break;
+		case('control_skrill'):
+			gateway = 'Skrill';
+			break;
+		case('control_gocardless'):
+			gateway = 'GoCardless';
+			break;
+		case('control_clickbank'):
+			gateway = 'Clickbank';
+			break;
+		case('control_onebip'):
+			gateway = 'Onebip';
+			break;
+		default: 
+			gateway = 'Purchase Order';
+	}
+	return gateway;
+}
+
+function arrayify(rawForms, forms) {
 	rawForms.forEach(form => forms.push([form.id, form.title, form.status]));
 }
 
@@ -101,7 +200,7 @@ function updateGraph() {
     window.localStorage.setItem('paymentForms', JSON.stringify(chartData));
 }
 
-function addFormToTable(form, total, currency){
+function addFormToTable(form, total, currency) {
 	// we need 2 seperate arrays for data. first array only consists of the total earnings, so that we can sort our data.
 	// second array has the info to be shown for each form. isShown is 0 if the form is not shown yet. more detail can be found in 'findForm(total)'.
 	table.innerHTML +=
@@ -109,11 +208,13 @@ function addFormToTable(form, total, currency){
 			<td scope='row'><a href='/form/${form[0]}'>${form[1]}</a></td> 
 			<td>${form[2] == 'ENABLED' ? 'yes' : 'no'}</td>
 			<td>${total} ${currency}</td>
+			<td>${form[5]}</td>
+			<td>${findGateway(form[4])}</td>
 			</tr>`;
 	setTimeout(() => {updateGraph()}, 300);
 }
 
-function getTotalEarned(form, qid){
+function getTotalEarned(form, qid) {
 	JF.getFormSubmissions(form[0], function(res){
 		let grandTotal = 0.00;
 		let currency = JSON.parse(res[0].answers[qid].answer.paymentArray).currency;
@@ -123,7 +224,7 @@ function getTotalEarned(form, qid){
 			}
 		}
 		ttlsData.push(grandTotal);
-		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0]});
+		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], control: form[4], paymentType: form[5]});
 		addFormToTable(form, grandTotal.toFixed(2), currency)
 	}, onError);
 }
@@ -136,7 +237,10 @@ function isPayment(form) {
 		for (var i=1; questions[i]; i++) {
 			if (types.includes(questions[i].type)) {
 				form[3] = true;
+				form.push(questions[i].type);
+				form.push(questions[i].paymentType);
 				getTotalEarned(form, i);
+				break;
 			}
 		}
 	}, onError);
@@ -145,7 +249,7 @@ function isPayment(form) {
 
 
 
-window.addEventListener('load', function(){	
+window.addEventListener('load', function() {	
 	// initialize API key
 	apiKey = window.localStorage.getItem('apiKey');
 	if (!apiKey) window.alert('You are not logged in, please navigate to home for logging in first.');
