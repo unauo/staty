@@ -2,12 +2,14 @@
 
 // obvious.
 var apiKey;
+
 //all control_gateway fields available on JotForm.
 var gateways = [ 'control_square', 'control_paypal', 'control_wepay', 'control_authnet', 'control_echeck', 'control_stripe',
 'control_stripeACH', 'control_sofort', 'control_moneris', 'control_payu', 'control_pagseguro', 'control_bluesnap',
 'control_paymentwall', 'control_payment', 'control_paypalexpress', 'control_paypalpro', 'control_payjunction', 'control_chargify',
 'control_bluepay', 'control_braintree', 'control_2co', 'control_cardconnect', 'control_worldpay', 'control_worldpayus',
 'control_eway', 'control_firstdata', 'control_paysafe', 'control_skrill', 'control_gocardless', 'control_clickbank', 'control_onebip' ];
+
 // temporary location for forms.
 var forms = [];
 // html table.
@@ -19,50 +21,111 @@ var ttlsData = [];
 var gtwysData = [];
 var typsData = [];
 
-
-
-var width = 800,
-    barHeight = 25;
-
+// some svg-d3 variables
+var width = 800;
+var barHeight = 25;
 var x = d3.scaleLinear()
     .range([1, 500]);
-
 var chart = d3.select('#bar-chart')
     .attr('width', width);
 
-// we fire this function to create the "earnings" bar chart.
-function earningsCharter() {
-	ttlsData = ttlsData.sort(function(a,b) { return b-a; });
-	x.domain([0, d3.max(ttlsData)]);
-	chart.attr('height', barHeight * ttlsData.length + 20);
-	
-	var bar = chart.selectAll('g')
-    	.data(ttlsData)
-    .enter().append('g')
-    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
-
-  	bar.append('rect')
-    	.attr('width', x)
-    	.attr('height', barHeight - 4);
-
-  	bar.append('text')
-      	.attr('x', function(d) { return x(d)+3; })
-      	.attr('y', barHeight / 2)
-      	.attr('dy', '.20em')
-		.text( function(d) { 
-			let i = findForm(d);
-			return chartData[i].name + ' (' + (chartData[i].total).toFixed(2) + ' ' + chartData[i].currency + ')'; 
-		});
-
-	chart.append('g')
-      	.attr('class', 'axis axis-x')
-      	.attr('transform', 'translate( 5,' + (ttlsData.length * barHeight + 2) + ')')
-      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
-}
 
 // we need a general alert function, because, because.
 function onError() {
 	alert('Oops, something went wrong, or not.');
+}
+
+// we also have a sorter for the html table, to sort the form by each field if asked.
+function sortText(n) {
+	var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
+	var ints = [0,1,2,3,4,5,6,7,8,9];
+	table = document.querySelector("#inner-table");
+	switching = true;
+	direction = "asc"; 
+
+	while (switching) {
+		switching = false;
+		rows = table.rows;
+
+		for (i = 0; i < (rows.length) - 1; i++) {
+	  		shouldSwitch = false;
+	  		x = rows[i].getElementsByTagName("td")[n].innerHTML;
+	 		y = rows[i + 1].getElementsByTagName("td")[n].innerHTML;
+
+	  		if (direction == "asc") {
+	  			if (x[0] === "<" && x[30] === ">") {
+			  			if (x.slice(31).toLowerCase() > y.slice(31).toLowerCase()) {
+				  		shouldSwitch = true;
+				  		break;
+					}
+		  		}
+		  		else if (x == "yes" || x == "no") {
+					if (x.toLowerCase() > y.toLowerCase()) {
+				  		shouldSwitch = true;
+				  		break;
+		  			}
+				}
+		  		else if (parseFloat(x.split(" ")[0]) > (parseFloat(y.split(" ")[0]))){
+		  			shouldSwitch = true;
+		  			break;
+		  		}
+		  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() > y.toLowerCase()) ){
+		  			shouldSwitch = true;
+		  			break;
+		  		}
+		  	} 
+		  	else if (direction == "desc") {
+		  		if (x[0] === "<" && x[30] === ">") {
+			  			if (x.slice(31).toLowerCase() < y.slice(31).toLowerCase()) {
+				  		shouldSwitch = true;
+				  		break;
+					}
+		  		}
+		  		else if (x == "yes" || x == "no") {
+		  			if (x.toLowerCase() < y.toLowerCase()) {
+				  		shouldSwitch = true;
+				  		break;
+		  			}
+				}
+		  		else if (parseFloat(x.split(" ")[0]) < (parseFloat(y.split(" ")[0]))){
+		  			shouldSwitch = true;
+		  			break;
+		  		}
+		  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() < y.toLowerCase()) ){
+		  			shouldSwitch = true;
+		  			break;
+		  		}
+		  	}
+		}
+		if (shouldSwitch) {
+		  	rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+		  	switching = true;
+		  	switchcount ++; 
+		} 
+		else {
+		  	if (switchcount == 0 && direction == "asc") {
+				direction = "desc";
+				switching = true;
+		  	}
+		}
+  	}
+}
+
+
+
+// we need to add the type to the "typsData" array.
+function addType(type) {
+	for (let i = 0; i < typsData.length; i++){
+		if (typsData[i].name == type) {
+			(typsData[i].value)++;
+			return;
+		}
+	}
+	let obj = {
+		name: type,
+		value: 1
+	}
+	typsData.push(obj);
 }
 
 // we need a switch-case for finding commercial name for a given control_gateway value.
@@ -165,81 +228,116 @@ function findGateway(control) {
 	return gateway;
 }
 
-// we also have a sorter for the html table, to sort the form by each field if asked.
-function sortText(n) {
-	var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
-	var ints = [0,1,2,3,4,5,6,7,8,9];
-	table = document.querySelector("#inner-table");
-	switching = true;
-	direction = "asc"; 
-
-	while (switching) {
-		switching = false;
-		rows = table.rows;
-
-		for (i = 0; i < (rows.length) - 1; i++) {
-	  		shouldSwitch = false;
-	  		x = rows[i].getElementsByTagName("td")[n].innerHTML;
-	 		y = rows[i + 1].getElementsByTagName("td")[n].innerHTML;
-
-	  		if (direction == "asc") {
-	  			if (x[0] === "<" && x[30] === ">") {
-			  			if (x.slice(31).toLowerCase() > y.slice(31).toLowerCase()) {
-				  		shouldSwitch = true;
-				  		break;
-					}
-		  		}
-		  		else if (x == "yes" || x == "no") {
-					if (x.toLowerCase() > y.toLowerCase()) {
-				  		shouldSwitch = true;
-				  		break;
-		  			}
-				}
-		  		else if (parseFloat(x.split(" ")[0]) > (parseFloat(y.split(" ")[0]))){
-		  			shouldSwitch = true;
-		  			break;
-		  		}
-		  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() > y.toLowerCase()) ){
-		  			shouldSwitch = true;
-		  			break;
-		  		}
-		  	} 
-		  	else if (direction == "desc") {
-		  		if (x[0] === "<" && x[30] === ">") {
-			  			if (x.slice(31).toLowerCase() < y.slice(31).toLowerCase()) {
-				  		shouldSwitch = true;
-				  		break;
-					}
-		  		}
-		  		else if (x == "yes" || x == "no") {
-		  			if (x.toLowerCase() < y.toLowerCase()) {
-				  		shouldSwitch = true;
-				  		break;
-		  			}
-				}
-		  		else if (parseFloat(x.split(" ")[0]) < (parseFloat(y.split(" ")[0]))){
-		  			shouldSwitch = true;
-		  			break;
-		  		}
-		  		else if ( !(ints.includes(parseFloat(x.split("")[0]))) && (x.toLowerCase() < y.toLowerCase()) ){
-		  			shouldSwitch = true;
-		  			break;
-		  		}
-		  	}
+// we need to add the gateway to the "gtwysData" array.
+function addGateway(gateway) {
+	for (let i = 0; i < gtwysData.length; i++){
+		if (gtwysData[i].name == gateway) {
+			(gtwysData[i].value)++;
+			return;
 		}
-		if (shouldSwitch) {
-		  	rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-		  	switching = true;
-		  	switchcount ++; 
-		} 
-		else {
-		  	if (switchcount == 0 && direction == "asc") {
-				direction = "desc";
-				switching = true;
-		  	}
-		}
-  	}
+	}
+	let obj = {
+		name: gateway,
+		value: 1
+	}
+	gtwysData.push(obj);
 }
+
+
+
+// we fire this function to create the "types" bar chart.
+function typesCharter() {
+	toClean.innerHTML = "";
+	typsData = [];
+	chartData.forEach(form => addType(form.type));
+	typsData = typsData.sort(function(a,b) { return b.value-a.value; });
+	x.domain([0, d3.max(typsData, function(d) { return d.value; })]);
+	chart.attr('height', barHeight * typsData.length + 20);
+	
+	var bar = chart.selectAll('g')
+    	.data(typsData)
+    .enter().append('g')
+    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
+
+  	bar.append('rect')
+    	.attr('width', function(d) { return x(d.value); })
+    	.attr('height', barHeight - 4);
+
+  	bar.append('text')
+      	.attr('x', function(d) { return x(d.value)+3; })
+      	.attr('y', barHeight / 2)
+      	.attr('dy', '.20em')
+		.text( function(d) { return d.name; });
+
+	chart.append('g')
+      	.attr('class', 'axis axis-x')
+      	.attr('transform', 'translate( 5,' + (typsData.length * barHeight + 2) + ')')
+      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
+}
+
+// we fire this function to create the "gateways" bar chart.
+function gatewaysCharter() {
+	toClean.innerHTML = "";
+	gtwysData = [];
+	chartData.forEach(form => addGateway(form.gateway));
+	gtwysData = gtwysData.sort(function(a,b) { return b.value-a.value; });
+	x.domain([0, d3.max(gtwysData, function(d) { return d.value; })]);
+	chart.attr('height', barHeight * gtwysData.length + 20);
+	
+	var bar = chart.selectAll('g')
+    	.data(gtwysData)
+    .enter().append('g')
+    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
+
+  	bar.append('rect')
+    	.attr('width', function(d) { return x(d.value); })
+    	.attr('height', barHeight - 4);
+
+  	bar.append('text')
+      	.attr('x', function(d) { return x(d.value)+3; })
+      	.attr('y', barHeight / 2)
+      	.attr('dy', '.20em')
+		.text( function(d) { return d.name; });
+
+	chart.append('g')
+      	.attr('class', 'axis axis-x')
+      	.attr('transform', 'translate( 5,' + (gtwysData.length * barHeight + 2) + ')')
+      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
+}
+
+// we fire this function to create the "earnings" bar chart.
+function earningsCharter() {
+	toClean.innerHTML = "";
+	ttlsData = ttlsData.sort(function(a,b) { return b-a; });
+	x.domain([0, d3.max(ttlsData)]);
+	chart.attr('height', barHeight * ttlsData.length + 20);
+	
+	var bar = chart.selectAll('g')
+    	.data(ttlsData)
+    .enter().append('g')
+    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
+
+  	bar.append('rect')
+    	.attr('width', x)
+    	.attr('height', barHeight - 4);
+
+  	bar.append('text')
+      	.attr('x', function(d) { return x(d)+3; })
+      	.attr('y', barHeight / 2)
+      	.attr('dy', '.20em')
+		.text( function(d) { 
+			let i = findForm(d);
+			chartData[i].isShown = 0;
+			return chartData[i].name + ' (' + (chartData[i].total).toFixed(2) + ' ' + chartData[i].currency + ')'; 
+		});
+
+	chart.append('g')
+      	.attr('class', 'axis axis-x')
+      	.attr('transform', 'translate( 5,' + (ttlsData.length * barHeight + 2) + ')')
+      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
+}
+
+
 
 // we need the index of the first unshown form with the given total earnings. this will be crucial if there are several forms with the same total.
 function findForm(total) {
