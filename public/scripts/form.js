@@ -19,10 +19,10 @@ function editHeader() {
 	title.innerHTML = `Statistics for your form: <i><a href="https://jotform.com/${formInfo.id}">${formInfo.name}</a></i>`;
 	header.appendChild(title);
 	var total = document.createElement('p');
-	total.innerHTML = `Total earnings from this form: ${formInfo.total.toFixed(2)} ${formInfo.currency}`;
+	total.innerHTML = `Total earnings from this ${formInfo.type} form: ${formInfo.total.toFixed(2)} ${formInfo.currency}`;
 	header.appendChild(total);
 	var status = document.createElement('p');
-	status.innerHTML = `${ formInfo.status == 'ENABLED' ? 'This form is still accepting submissions.' : 'This form is not accepting submissions.'}`
+	status.innerHTML = `All payments on this form is made via ${formInfo.gateway}. Currently, this form is ${formInfo.status == 'ENABLED' ? 'still' : 'not'} accepting payments.`
 	header.appendChild(status);
 	var sublink = document.createElement('p');
 	sublink.innerHTML = `<a href = "https://jotform.com/submissions/${formInfo.id}">Click here</a> to view this form's submissions on JotForm.`;
