@@ -15,6 +15,9 @@ app.get('/myforms', function(req, res){
 app.get('/form/:id', function(req, res){
 	res.render('form', {id: req.params.id});
 });
+app.get('/loggedout', function(req, res){
+	res.render('loggedout');
+});
 app.use( function(req, res) {
     res.status(404).render('404', {title: "Oops!"});
 });

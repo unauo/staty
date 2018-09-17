@@ -398,7 +398,7 @@ function isPayment(form) {
 window.addEventListener('load', function() {	
 	// initialize API key
 	apiKey = window.localStorage.getItem('apiKey');
-	if (!apiKey) window.alert('You are not logged in, please navigate to home for logging in first.');
+	if (!apiKey) window.alert('You are not logged in, please login first.');
 	JF.initialize({apiKey:apiKey});
 	// get forms and check if they are payment forms
 	JF.getForms(function(res){

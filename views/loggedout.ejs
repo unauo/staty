@@ -10,23 +10,43 @@
 
 	    <!-- own styling -->
 	    <link rel="stylesheet" href="../styles/base.css">
-		<title>oops!</title>
+		<title>Staty by JotForm</title>
 	</head>
 
 	<body>
-		
+
 		<% include partials/nav.ejs %>
-
-		<div class="container col-11">
-	    	<h1>this page does not exist :(</h1>
-		</div>
 		
+		<div id="form-info" class="container col-11">
+			<p>You are logged out. Please <a href="/">login</a> to see your forms.</p>
+		</div>
 
-		<!-- Optional JavaScript -->
+		<!-- axios, d3 and own script -->
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script src="../scripts/form.js"></script>
+
+		<script>
+			// change logout button to login button 
+			nav = document.querySelector('nav');
+			nav.removeChild(nav.childNodes[5]);
+			var login = document.createElement('a');
+			var text = document.createTextNode('login');
+			login.setAttribute('href', '/');
+			login.setAttribute('class', 'nav-link ml-auto');
+			login.appendChild(text);
+			nav.appendChild(login);
+			// clear local storage
+			window.localStorage.removeItem('apiKey');
+			window.localStorage.removeItem('paymentForms');
+		</script>
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+	    
+		
 	</body>
 </html>
 

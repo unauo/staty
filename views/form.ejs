@@ -21,13 +21,15 @@
 		</div>
 
 		<!-- axios, d3 and own script -->
-		<script src= "https://unpkg.com/axios/dist/axios.min.js"></script>
-		<script src= "https://d3js.org/d3.v5.min.js"></script>
-		<script src= "../scripts/form.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script src="../scripts/form.js"></script>
 
 		<script>
+			// getting form id from url
 			const formID = <%= id %>;
 			var formInfo = [];
+			// JotForm authentication
 			window.addEventListener("load", function(){
 				var apiKey;
 				if (window.localStorage.getItem("apiKey")) {
@@ -45,14 +47,11 @@
 						}
 			    	);
 				}
-				
+				// setting up form info
 				if (setForm(formID)) formInfo = setForm(formID);
 				else window.alert("oops something went wrong, or not.");
-
+				// editing page
 				editHeader();
-
-				getFormQuestions(formID,apiKey);
-
 			});
 		</script>
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
