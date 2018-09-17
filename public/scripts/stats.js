@@ -29,12 +29,13 @@ var x = d3.scaleLinear()
 var chart = d3.select('#bar-chart')
     .attr('width', width);
 
+// to change inbetween graphs, we need to clean up the svg.
+var toClean = document.querySelector("svg");
 
 // we need a general alert function, because, because.
 function onError() {
 	alert('Oops, something went wrong, or not.');
 }
-
 // we also have a sorter for the html table, to sort the form by each field if asked.
 function sortText(n) {
 	var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
@@ -127,7 +128,6 @@ function addType(type) {
 	}
 	typsData.push(obj);
 }
-
 // we need a switch-case for finding commercial name for a given control_gateway value.
 function findGateway(control) {
 	let gateway;
@@ -227,7 +227,6 @@ function findGateway(control) {
 	}
 	return gateway;
 }
-
 // we need to add the gateway to the "gtwysData" array.
 function addGateway(gateway) {
 	for (let i = 0; i < gtwysData.length; i++){
@@ -274,7 +273,6 @@ function typesCharter() {
       	.attr('transform', 'translate( 5,' + (typsData.length * barHeight + 2) + ')')
       	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
 }
-
 // we fire this function to create the "gateways" bar chart.
 function gatewaysCharter() {
 	toClean.innerHTML = "";
@@ -304,7 +302,6 @@ function gatewaysCharter() {
       	.attr('transform', 'translate( 5,' + (gtwysData.length * barHeight + 2) + ')')
       	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
 }
-
 // we fire this function to create the "earnings" bar chart.
 function earningsCharter() {
 	toClean.innerHTML = "";
@@ -348,7 +345,6 @@ function findForm(total) {
 		}
 	}
 }
-
 // we need a function to add forms to html table as they are loaded.
 function addFormToTable(form, total, currency) {
 	// we need 2 seperate arrays for data. first array only consists of the total earnings, so that we can sort our data.
@@ -364,7 +360,6 @@ function addFormToTable(form, total, currency) {
 	// update local storage everytime a new form arrives. we need to store the forms for individual pages.
 	window.localStorage.setItem('paymentForms', JSON.stringify(chartData));
 }
-
 // we need to fetch the payments for each form, while also fetching the currency of each. then we call addFormToTable() to add each form to html table.
 function getTotalEarned(form, qid) {
 	JF.getFormSubmissions(form[0], function(res){
@@ -380,7 +375,6 @@ function getTotalEarned(form, qid) {
 		addFormToTable(form, grandTotal.toFixed(2), currency);
 	}, onError);
 }
-
 // by fetching all questions, we check if the form has any control_gateway field, meaning it is a payment form of some sort.
 function isPayment(form) {
 	if (form[2] == 'DELETED') return false;
