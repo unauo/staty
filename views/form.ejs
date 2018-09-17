@@ -20,6 +20,21 @@
 		<div id="form-info" class= "container col-11">
 		</div>
 
+		<div class="container col-11" id="table" align="left">
+			<p>Submissions:</p>
+			<table class="table table-hover table-dark">
+			  	<thead>
+			    	<tr>
+					    <th scope="col" id="name"> <a href="#" onclick="sortTableText(0);"> ▼ </a>name:</th>
+					    <th scope="col" id="email"> <a href="#" onclick="sortTableText(1);"> ▼ </a>e-mail:</th>
+					    <th scope="col" id="total"> <a href="#" onclick="sortTableText(2);"> ▼ </a>total paid:</th>
+				    </tr>
+			  	</thead>
+			 	<tbody id="inner-table">
+			  	</tbody>
+			</table>
+		</div>
+
 		<!-- axios, d3 and own script -->
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
@@ -29,6 +44,10 @@
 			// getting form id from url
 			const formID = <%= id %>;
 			var formInfo = [];
+			// sorter for the table
+			function sortTableText(n) {
+				sortText(n);
+			}
 			// JotForm authentication
 			window.addEventListener("load", function(){
 				var apiKey;
@@ -52,6 +71,7 @@
 				else window.alert("oops something went wrong, or not.");
 				// editing page
 				editHeader();
+				getFormSubmissions(formID, apiKey);
 			});
 		</script>
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->

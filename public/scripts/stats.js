@@ -371,7 +371,7 @@ function getTotalEarned(form, qid) {
 			}
 		}
 		ttlsData.push(grandTotal);
-		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], gateway: findGateway(form[4]), type: form[5]});
+		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], gateway: findGateway(form[4]), type: form[5], control: form[4]});
 		addFormToTable(form, grandTotal.toFixed(2), currency);
 	}, onError);
 }
