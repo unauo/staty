@@ -23,7 +23,7 @@ var typsData = [];
 
 // some svg-d3 variables
 var width = 800;
-var barHeight = 25;
+var barHeight = 50;
 var x = d3.scaleLinear()
     .range([1, 500]);
 var chart = d3.select('#bar-chart')
