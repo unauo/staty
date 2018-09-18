@@ -88,3 +88,22 @@ a:hover, a:active{
 	text-decoration: none;
 }
 
+.table-link {
+	color: var(--main-text);
+}
+
+.table-link:hover, .table-link:active  {
+	color: var(--main-light);
+	text-decoration: none;
+}
+
+.table-link-active:hover, .table-link-active:active  {
+	color: var(--main-light);
+	text-decoration: none;
+}
+
+.table-link-active {
+	color: var(--main-light);
+	text-decoration: none;
+}
+
