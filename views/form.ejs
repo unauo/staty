@@ -25,10 +25,10 @@
 			<table class="table table-hover table-dark">
 			  	<thead>
 			    	<tr>
-					    <th scope="col" id="name"> <a href="#" onclick="sortTableText(0);"> ▼ </a>name:</th>
-					    <th scope="col" id="email"> <a href="#" onclick="sortTableText(1);"> ▼ </a>e-mail:</th>
-					    <th scope="col" id="total"> <a href="#" onclick="sortTableText(2);"> ▼ </a>total paid:</th>
-					    <th scope="col" id="orders"> <a href="#" onclick="sortTableText(3);"> ▼ </a>product(count):</th>
+					    <th scope="col" id="name"> <a href="#" class="triangle table-link" onclick="sortTableText(0);"> ▼ </a>name:</th>
+					    <th scope="col" id="email"> <a href="#" class="triangle table-link" onclick="sortTableText(1);"> ▼ </a>e-mail:</th>
+					    <th scope="col" id="total"> <a href="#" class="triangle table-link-active" onclick="sortTableText(2);"> ▼ </a>total paid:</th>
+					    <th scope="col" id="orders"> <a href="#" class="triangle table-link" onclick="sortTableText(3);"> ▼ </a>product(count):</th>
 				    </tr>
 			  	</thead>
 			 	<tbody id="inner-table">
@@ -36,42 +36,49 @@
 			</table>
 		</div>
 
-		<!-- axios, d3 and own script -->
+		<!-- axios and own script -->
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<script src="../scripts/form.js"></script>
 
 		<script>
 			// getting form id from url
 			const formID = <%= id %>;
 			var formInfo = [];
+			//handling graph and table changes
+	    	var tableLinks = document.querySelectorAll('.triangle');
+	    	var activeLink = 2;
 			// sorter for the table
 			function sortTableText(n) {
 				sortText(n);
+				tableLinks[activeLink].classList.remove('table-link-active');
+				tableLinks[activeLink].classList.add('table-link');
+				tableLinks[n].classList.remove('table-link');
+				tableLinks[n].classList.add('table-link-active');
+				activeLink = n;
 			}
 			// JotForm authentication
-			window.addEventListener("load", function(){
+			window.addEventListener('load', function(){
 				var apiKey;
-				if (window.localStorage.getItem("apiKey")) {
-					var apiKey = window.localStorage.getItem("apiKey");
+				if (window.localStorage.getItem('apiKey')) {
+					var apiKey = window.localStorage.getItem('apiKey');
 				}
 				else {
 					JF.login(
 				    	function success(){
 				    		var apiKey = JF.getAPIKey();
-			 	        	window.localStorage.setItem("apiKey", apiKey);
+			 	        	window.localStorage.setItem('apiKey', apiKey);
 			 			},
 				        function error(err){
 				        	console.log(err);
-							window.alert("oops something went wrong, or not.");
+							window.alert('oops something went wrong.');
 						}
 			    	);
 				}
 				// setting up form info
 				if (setForm(formID)) formInfo = setForm(formID);
-				else window.alert("oops something went wrong, or not.");
+				else window.alert('oops something went wrong.');
 				// editing page
-				editHeader();
+				editHeader(0);
 				getFormSubmissions(formID, apiKey);
 			});
 		</script>

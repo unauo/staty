@@ -12,24 +12,38 @@ var submissions = [];
 var table = document.querySelector('#inner-table');
 // huge product array
 var productData = [];
+// form index of formInfo in allForms
+var formIndex;
+// keep up with updated t
+var t = 0;
 
 // sets up formID 
 function setForm(formID) {
 	for (let i = 0; i < allForms.length; i++) {
 		if (allForms[i].id == formID) {
 			formInfo = allForms[i];
+			formIndex = i;
 			return formInfo;
 		}
 	}
 	return false;
 }
 // edits the page content 
-function editHeader() {
+function editHeader(t) {
+	header.innerHTML ='';
 	var title = document.createElement('h2');
 	title.innerHTML = `Statistics for your form: <i><a href="https://jotform.com/${formInfo.id}">${formInfo.name}</a></i>`;
 	header.appendChild(title);
 	var total = document.createElement('p');
-	total.innerHTML = `Total earnings from this ${formInfo.type} form: ${formInfo.total.toFixed(2)} ${formInfo.currency}`;
+	// if t is zero, it's the first call, otherwise it's an update call
+	if (t) {
+		total.innerHTML = `Total earnings from this ${formInfo.type} form: ${t.toFixed(2)} ${formInfo.currency}`;
+		allForms[formIndex].total = t;
+		window.localStorage.setItem('paymentForms', JSON.stringify(allForms));
+	}
+	else {
+		total.innerHTML = `Total earnings from this ${formInfo.type} form: ${formInfo.total.toFixed(2)} ${formInfo.currency}`;
+	}
 	header.appendChild(total);
 	var status = document.createElement('p');
 	status.innerHTML = `All payments on this form is made via ${formInfo.gateway}. Currently, this form is ${formInfo.status == 'ENABLED' ? 'still' : 'not'} accepting payments.`
@@ -170,8 +184,10 @@ function arrayify(answers, name, email, control) {
 			answer: answers[i].answers[control].answer,
 			products: products
 		};
+		t += JSON.parse(obj.payment.total);
 		submissions.push(obj);
 	}
+	if (t != formInfo.total) editHeader(t);
 	submissions.forEach(item => tableify(item));
 }
 // axios request for submissions
@@ -210,6 +226,7 @@ function tableify(item) {
 		<td>${stringifyProducts(item.products)}</td>
 		</tr>
 	`;
+	sortText(2);
 }
 
 

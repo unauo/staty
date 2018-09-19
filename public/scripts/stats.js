@@ -21,17 +21,6 @@ var ttlsData = [];
 var gtwysData = [];
 var typsData = [];
 
-// some svg-d3 variables
-var width = 800;
-var barHeight = 50;
-var x = d3.scaleLinear()
-    .range([1, 500]);
-var chart = d3.select('#bar-chart')
-    .attr('width', width);
-
-// to change inbetween graphs, we need to clean up the svg.
-var toClean = document.querySelector("svg");
-
 // we need a general alert function, because, because.
 function onError() {
 	alert('Oops, something went wrong, or not.');
@@ -111,7 +100,6 @@ function sortText(n) {
 		}
   	}
 }
-
 
 
 // we need to add the type to the "typsData" array.
@@ -243,136 +231,42 @@ function addGateway(gateway) {
 }
 
 
-
-// we fire this function to create the "types" bar chart.
-function typesCharter() {
-	toClean.innerHTML = "";
-	typsData = [];
-	chartData.forEach(form => addType(form.type));
-	typsData = typsData.sort(function(a,b) { return b.value-a.value; });
-	x.domain([0, d3.max(typsData, function(d) { return d.value; })]);
-	chart.attr('height', barHeight * typsData.length + 20);
-	
-	var bar = chart.selectAll('g')
-    	.data(typsData)
-    .enter().append('g')
-    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
-
-  	bar.append('rect')
-    	.attr('width', function(d) { return x(d.value); })
-    	.attr('height', barHeight - 4);
-
-  	bar.append('text')
-      	.attr('x', function(d) { return x(d.value)+3; })
-      	.attr('y', barHeight / 2)
-      	.attr('dy', '.20em')
-		.text( function(d) { return d.name; });
-
-	chart.append('g')
-      	.attr('class', 'axis axis-x')
-      	.attr('transform', 'translate( 5,' + (typsData.length * barHeight + 2) + ')')
-      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
-}
-// we fire this function to create the "gateways" bar chart.
-function gatewaysCharter() {
-	toClean.innerHTML = "";
-	gtwysData = [];
-	chartData.forEach(form => addGateway(form.gateway));
-	gtwysData = gtwysData.sort(function(a,b) { return b.value-a.value; });
-	x.domain([0, d3.max(gtwysData, function(d) { return d.value; })]);
-	chart.attr('height', barHeight * gtwysData.length + 20);
-	
-	var bar = chart.selectAll('g')
-    	.data(gtwysData)
-    .enter().append('g')
-    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
-
-  	bar.append('rect')
-    	.attr('width', function(d) { return x(d.value); })
-    	.attr('height', barHeight - 4);
-
-  	bar.append('text')
-      	.attr('x', function(d) { return x(d.value)+3; })
-      	.attr('y', barHeight / 2)
-      	.attr('dy', '.20em')
-		.text( function(d) { return d.name; });
-
-	chart.append('g')
-      	.attr('class', 'axis axis-x')
-      	.attr('transform', 'translate( 5,' + (gtwysData.length * barHeight + 2) + ')')
-      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
-}
-// we fire this function to create the "earnings" bar chart.
-function earningsCharter() {
-	toClean.innerHTML = "";
-	ttlsData = ttlsData.sort(function(a,b) { return b-a; });
-	x.domain([0, d3.max(ttlsData)]);
-	chart.attr('height', barHeight * ttlsData.length + 20);
-	
-	var bar = chart.selectAll('g')
-    	.data(ttlsData)
-    .enter().append('g')
-    	.attr('transform', function(d, i) { return 'translate(5,' + (i * barHeight + 5) + ')'; });
-
-  	bar.append('rect')
-    	.attr('width', x)
-    	.attr('height', barHeight - 4);
-
-  	bar.append('text')
-      	.attr('x', function(d) { return x(d)+3; })
-      	.attr('y', barHeight / 2)
-      	.attr('dy', '.20em')
-		.text( function(d) { 
-			let i = findForm(d);
-			chartData[i].isShown = 0;
-			return chartData[i].name + ' (' + (chartData[i].total).toFixed(2) + ' ' + chartData[i].currency + ')'; 
-		});
-
-	chart.append('g')
-      	.attr('class', 'axis axis-x')
-      	.attr('transform', 'translate( 5,' + (ttlsData.length * barHeight + 2) + ')')
-      	.call(d3.axisBottom(x).tickFormat(function(d){ return d;}));
-}
-
-
-
-// we need the index of the first unshown form with the given total earnings. this will be crucial if there are several forms with the same total.
-function findForm(total) {
-	for (let i = 0; i < chartData.length; i ++) {
-		if ((chartData[i].isShown == 0) && (parseFloat(chartData[i].total) == total)) {
-			chartData[i].isShown = 1;
-			return i;
-		}
-	}
-}
 // we need a function to add forms to html table as they are loaded.
 function addFormToTable(form, total, currency) {
 	// we need 2 seperate arrays for data. first array only consists of the total earnings, so that we can sort our data.
 	// second array has the info to be shown for each form. isShown is 0 if the form is not shown yet. more detail can be found in 'findForm(total)'.
 	table.innerHTML +=
-			`<tr>
-			<td scope='row'><a href='/form/${form[0]}'>${form[1]}</a></td> 
-			<td>${form[2] == 'ENABLED' ? 'yes' : 'no'}</td>
-			<td>${total} ${currency}</td>
-			<td>${form[5]}</td>
-			<td>${findGateway(form[4])}</td>
-			</tr>`;
-	// update local storage everytime a new form arrives. we need to store the forms for individual pages.
+		`<tr>
+		<td scope='row'><a href='/form/${form[0]}'>${form[1]}</a></td> 
+		<td>${form[2] == 'ENABLED' ? 'yes' : 'no'}</td>
+		<td>${total} ${currency}</td>
+		<td>${form[5]}</td>
+		<td>${findGateway(form[4])}</td>
+		</tr>`;
+	// sort the table and update local storage everytime a new form arrives. we need to store the forms for individual pages.
 	window.localStorage.setItem('paymentForms', JSON.stringify(chartData));
+	sortText(0);
 }
 // we need to fetch the payments for each form, while also fetching the currency of each. then we call addFormToTable() to add each form to html table.
 function getTotalEarned(form, qid) {
 	JF.getFormSubmissions(form[0], function(res){
+
 		let grandTotal = 0.00;
 		let currency = JSON.parse(res[0].answers[qid].answer.paymentArray).currency;
+
 		for (var i=0; i<res.length; i++) {
 			if (res[i].answers && res[i].answers[qid].answer){
 				grandTotal += parseFloat(JSON.parse(res[i].answers[qid].answer.paymentArray).total);
 			}
 		}
-		ttlsData.push(grandTotal);
+
+		ttlsData.push({'name': form[1], 'total':grandTotal});
 		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], gateway: findGateway(form[4]), type: form[5], control: form[4]});
+
 		addFormToTable(form, grandTotal.toFixed(2), currency);
+		addGateway(findGateway(form[4]));
+		addType(form[5]);
+
 	}, onError);
 }
 // by fetching all questions, we check if the form has any control_gateway field, meaning it is a payment form of some sort.
