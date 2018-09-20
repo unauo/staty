@@ -21,6 +21,7 @@ var ttlsData = [];
 var gtwysData = [];
 var typsData = [];
 
+
 // we need a general alert function, because, because.
 function onError() {
 	alert('Oops, something went wrong, or not.');
@@ -106,15 +107,16 @@ function sortText(n) {
 function addType(type) {
 	for (let i = 0; i < typsData.length; i++){
 		if (typsData[i].name == type) {
-			(typsData[i].value)++;
+			(typsData[i].y)++;
 			return;
 		}
 	}
 	let obj = {
 		name: type,
-		value: 1
+		y: 1
 	}
 	typsData.push(obj);
+	pieCharter('payment types', 'share', typsData, 'second-chart');
 }
 // we need a switch-case for finding commercial name for a given control_gateway value.
 function findGateway(control) {
@@ -219,15 +221,16 @@ function findGateway(control) {
 function addGateway(gateway) {
 	for (let i = 0; i < gtwysData.length; i++){
 		if (gtwysData[i].name == gateway) {
-			(gtwysData[i].value)++;
+			(gtwysData[i].y)++;
 			return;
 		}
 	}
 	let obj = {
 		name: gateway,
-		value: 1
+		y: 1
 	}
 	gtwysData.push(obj);
+	pieCharter('payment gateways', 'share', gtwysData, 'third-chart');
 }
 
 
@@ -260,7 +263,8 @@ function getTotalEarned(form, qid) {
 			}
 		}
 
-		ttlsData.push({'name': form[1], 'total':grandTotal});
+		ttlsData.push({name: form[1], y:grandTotal});
+		pieCharter('total earnings', 'share', ttlsData, 'first-chart');
 		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], gateway: findGateway(form[4]), type: form[5], control: form[4]});
 
 		addFormToTable(form, grandTotal.toFixed(2), currency);
@@ -287,6 +291,61 @@ function isPayment(form) {
 	}, onError);
 	return false;
 }
+
+function pieCharter(title, name, data, id){
+	var clear = document.querySelector('#' + id);
+	clear.innerHTML = '';
+	var pieColors = (function () {
+	  	var colors = [];
+	    var base = '#fa8900';
+	    var i;
+		for (i = 0; i < data.length; i += 1) {
+		    colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+	  	}
+	  	return colors;
+	}());
+
+	Highcharts.chart(id, {
+  		chart: {
+  			backgroundColor: '#212529',
+	    	plotBackgroundColor: '#212529',
+	    	plotBorderWidth: null,
+	    	plotShadow: false,
+	    	type: 'pie'
+  		},
+  		title: {
+    		text: title,
+    		style: { "color": "#ffffff" }
+  		},
+  		tooltip: {
+    		pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
+  		},
+  		plotOptions: {
+    		pie: {
+      			allowPointSelect: true,
+      			cursor: 'pointer',
+      			colors: pieColors,
+      			dataLabels: {
+        			enabled: true,
+        			format: '<b>{point.name}</b><br>{point.percentage:.0f} %',
+        			distance: -50,
+	        		filter: {
+	          			property: 'percentage',
+	          			operator: '>',
+	          			value: 4
+	        		}
+      			}
+    		}
+  		},
+	  	series: [{
+		    name: name,
+		    data: data
+  		}]
+	});
+}
+
+
+
 
 
 window.addEventListener('load', function() {	

@@ -21,21 +21,40 @@
 			<p id="choose-form">Choose a form you want to see the stats of:</p>
 			<table class="table table-hover table-dark">
 			  	<thead>
-			    	<tr>
+			    		<tr>
 					    <th scope="col"> <a href="#" class="triangle table-link-active" onclick="sortTableText(0);"> ▼ </a> form name:</th>
 					    <th scope="col"> <a href="#" class="triangle table-link" onclick="sortTableText(1);"> ▼ </a> still accepting payments?</th>
 					    <th scope="col"> <a href="#" class="triangle table-link" onclick="sortTableText(2);"> ▼ </a> total earnings:</th>
 					    <th scope="col"> <a href="#" class="triangle table-link" onclick="sortTableText(3);"> ▼ </a> payment type:</th>
 					    <th scope="col"> <a href="#" class="triangle table-link" onclick="sortTableText(4);"> ▼ </a> payment gateway:</th>
-				    </tr>
+					</tr>
 			  	</thead>
 			 	<tbody id="inner-table">
 			  	</tbody>
 			</table>
 		</div>
 
-		<!-- JotForm and own script -->
+		<div class="container col-11">
+			<div class="row">
+					<div class="col-12 col-lg-6" id="first-chart">
+						
+					</div>
+    				<div class="col-12 col-sm-6 col-lg-3" id="second-chart">
+				
+    				</div>
+    				<div class="col-12 col-sm-6 col-lg-3" id="third-chart"">
+				
+    				</div>
+  			</div>
+		</div>
+		
+
+		<!-- JotForm, HighCharts and own script -->
+
 		<script src="https://js.jotform.com/JotForm.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
 		<script src="../scripts/stats.js"></script>
 
 	    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -47,6 +66,7 @@
 	    	//handling graph and table changes
 	    	var tableLinks = document.querySelectorAll('.triangle');
 	    	var activeLink = 0;
+	    	
 
 	    	function sortTableText(n) {
 				sortText(n);
@@ -56,6 +76,7 @@
 				tableLinks[n].classList.add('table-link-active');
 				activeLink = n;
 			}
+
 
 		</script>
 	</body>
