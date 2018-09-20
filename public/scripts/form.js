@@ -16,6 +16,8 @@ var productData = [];
 var formIndex;
 // keep up with updated t
 var t = 0;
+// total vs submissions time line chart
+var timeArray = [];
 
 // sets up formID 
 function setForm(formID) {
@@ -186,6 +188,8 @@ function arrayify(answers, name, email, control) {
 		};
 		t += JSON.parse(obj.payment.total);
 		submissions.push(obj);
+		timeArray.push([Date.parse(obj.time), parseFloat(obj.payment.total)]);
+
 	}
 	if (t != formInfo.total) editHeader(t);
 	submissions.forEach(item => tableify(item));
@@ -227,6 +231,78 @@ function tableify(item) {
 		</tr>
 	`;
 	sortText(2);
+	lineCharter(timeArray.sort((a,b) => a[0] > b[0]));
+}
+
+
+
+function lineCharter(data) {
+
+    Highcharts.chart('line-chart', {
+      	chart: {
+	        zoomType: 'x',
+	        backgroundColor: '#212529',
+		    plotBackgroundColor: '#212529',
+		    colorAxis: { 
+		    	gridLineColor: '#eadbcc',
+		    	labels: { 
+		    		style: { "color": "#dddddd" }
+		    	}
+			}
+      	},
+	    title: {
+	        text: 'payments over time',
+	        style: { "color": "#ffffff" }
+      	},
+      	subtitle: {
+        	text: document.ontouchstart === undefined ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
+        	style: { "color": "#cccccc" }
+      	},
+	    xAxis: {
+	        type: 'datetime'
+	    },
+	    yAxis: {
+	        title: {
+	          	text: 'payment amount',
+	          	style: { "color": "#cccccc" }
+	        }
+	    },
+	    legend: {
+	        enabled: false,
+	    },
+	    plotOptions: {
+	        area: {
+	        	fillColor: {
+	            	linearGradient: {
+			            x1: 0,
+			            y1: 0,
+			            x2: 0,
+			            y2: 1
+	            	},
+	            	stops: [
+	              		[0, '#fa8900'],
+	              		[1, Highcharts.Color('#fa8900').setOpacity(0).get('rgba')]
+	            	]
+	          	},
+	          	marker: {
+	            	radius: 2
+	          	},
+	          	lineWidth: 1,
+          		states: {
+            		hover: {
+              			lineWidth: 1
+            		}
+          		},
+	          	threshold: null
+	        }
+	    },
+	    series: [{
+	    	color: '#fa8900',
+	        type: 'area',
+	        name: 'payment',
+	        data: data
+	    }]
+    });
 }
 
 

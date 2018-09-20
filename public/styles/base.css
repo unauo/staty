@@ -44,21 +44,8 @@ body {
 	color: var(--main-dark);
 }
 
-#graph {
-	overflow: scroll;
-	margin-top: 30px;
-}
-
 svg {
-	margin-top: 20px;
-}
-
-#bar-chart g text {
-	fill: var(--main-text);
-}
-
-#bar-chart g rect {
-	fill: var(--main-light);
+	margin-top: 11.5px;
 }
 
 a .sorter {
