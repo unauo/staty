@@ -108,6 +108,7 @@ function addType(type) {
 	for (let i = 0; i < typsData.length; i++){
 		if (typsData[i].name == type) {
 			(typsData[i].y)++;
+			charter('payment types', 'share', typsData.sort((a,b) => a.y > b.y), 'second-chart');
 			return;
 		}
 	}
@@ -116,7 +117,7 @@ function addType(type) {
 		y: 1
 	}
 	typsData.push(obj);
-	pieCharter('payment types', 'share', typsData, 'second-chart');
+	charter('payment types', 'share', typsData.sort((a,b) => a.y > b.y), 'second-chart');
 }
 // we need a switch-case for finding commercial name for a given control_gateway value.
 function findGateway(control) {
@@ -222,6 +223,7 @@ function addGateway(gateway) {
 	for (let i = 0; i < gtwysData.length; i++){
 		if (gtwysData[i].name == gateway) {
 			(gtwysData[i].y)++;
+			charter('payment gateways', 'share', gtwysData.sort((a,b) => a.y < b.y), 'third-chart');
 			return;
 		}
 	}
@@ -230,7 +232,7 @@ function addGateway(gateway) {
 		y: 1
 	}
 	gtwysData.push(obj);
-	pieCharter('payment gateways', 'share', gtwysData, 'third-chart');
+	charter('payment gateways', 'share', gtwysData.sort((a,b) => a.y < b.y), 'third-chart');
 }
 
 
@@ -264,7 +266,7 @@ function getTotalEarned(form, qid) {
 		}
 
 		ttlsData.push({name: form[1], y:grandTotal});
-		pieCharter('total earnings', 'share', ttlsData, 'first-chart');
+		charter('total earnings', 'share', ttlsData.sort((a,b) => a.y < b.y), 'first-chart');
 		chartData.push({isShown: 0, name: form[1], total: grandTotal, currency: currency, status: form[2], question: qid, id: form[0], gateway: findGateway(form[4]), type: form[5], control: form[4]});
 
 		addFormToTable(form, grandTotal.toFixed(2), currency);
@@ -292,6 +294,11 @@ function isPayment(form) {
 	return false;
 }
 
+function charter(title, name, data, id) {
+	if (data.length < 10) pieCharter(title, name, data, id);
+	else barCharter(title, name, data, id);
+}
+
 function pieCharter(title, name, data, id){
 	var clear = document.querySelector('#' + id);
 	clear.innerHTML = '';
@@ -299,7 +306,7 @@ function pieCharter(title, name, data, id){
 	  	var colors = [];
 	    var base = '#fa8900';
 	    var i;
-		for (i = 0; i < data.length; i += 1) {
+		for (i = 0; i < data.length; i++) {
 		    colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
 	  	}
 	  	return colors;
@@ -327,25 +334,92 @@ function pieCharter(title, name, data, id){
       			colors: pieColors,
       			dataLabels: {
         			enabled: true,
-        			format: '<b>{point.name}</b><br>{point.percentage:.0f} %',
+        			format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
         			distance: -50,
 	        		filter: {
 	          			property: 'percentage',
 	          			operator: '>',
-	          			value: 4
+	          			value: 3
 	        		}
       			}
     		}
   		},
 	  	series: [{
 		    name: name,
-		    data: data
+		    data: data,
   		}]
 	});
 }
 
-
-
+function barCharter(title, name, data, id){
+	var clear = document.querySelector('#' + id);
+	clear.innerHTML = '';
+	let pointFormat;
+	let yTitle;
+	if (title != 'total earnings') {
+		pointFormat = 'count: <b>{point.y:.0f} </b>';
+		yTitle = 'count';
+	}
+	else {
+		pointFormat = 'earning: <b>{point.y:.2f} </b>';
+		yTitle = 'earning';
+	}
+	Highcharts.chart(id, {
+  		chart: {
+    		type: 'bar',
+    		backgroundColor: '#212529',
+		    plotBackgroundColor: '#212529',
+		    colorAxis: { 
+		    	gridLineColor: '#eadbcc',
+		    	labels: { 
+		    		style: { "color": "#dddddd" }
+		    	}
+			}
+  		},
+  		title: {
+    		text: title,
+    		style: { "color": "#ffffff" }
+  		},
+  		plotOptions: {
+  			bar: {
+  				pointStart: 1
+  			}
+  		},
+ 		yAxis: {
+    		min: 0,
+    		title: {
+      			text: yTitle
+    		},
+    		gridLineColor: '#666666',
+    		allowDecimals: false
+  		},
+  		xAxis:{
+  			min: 1
+  		},
+  		legend: {
+    		enabled: false
+  		},
+  		tooltip: {
+    		pointFormat: pointFormat
+  		},
+  		series: [{
+    		name: name,
+    		data: data,
+    		color: '#fa8900',
+    		dataLabels: {
+      			enabled: true,
+      			color: '#ffffff',
+      			align: 'right',
+      			format: '{point.name}', 
+      			y: 10, // 10 pixels down from the top
+      			style: {
+			        fontSize: '13px',
+			        fontFamily: 'Verdana, sans-serif'
+      			}
+    		}
+  		}]
+	});
+}
 
 
 window.addEventListener('load', function() {	

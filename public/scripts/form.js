@@ -18,6 +18,126 @@ var formIndex;
 var t = 0;
 // total vs submissions time line chart
 var timeArray = [];
+// product vs submissions time line chart data
+var productTimes = [];
+
+var x = [{
+    name: "Winter 2014-2015",
+    data: [
+      [Date.UTC(1970, 10, 25), 0],
+      [Date.UTC(1970, 11,  6), 0.25],
+      [Date.UTC(1970, 11, 20), 1.41],
+      [Date.UTC(1970, 11, 25), 1.64],
+      [Date.UTC(1971, 0,  4), 1.6],
+      [Date.UTC(1971, 0, 17), 2.55],
+      [Date.UTC(1971, 0, 24), 2.62],
+      [Date.UTC(1971, 1,  4), 2.5],
+      [Date.UTC(1971, 1, 14), 2.42],
+      [Date.UTC(1971, 2,  6), 2.74],
+      [Date.UTC(1971, 2, 14), 2.62],
+      [Date.UTC(1971, 2, 24), 2.6],
+      [Date.UTC(1971, 3,  1), 2.81],
+      [Date.UTC(1971, 3, 11), 2.63],
+      [Date.UTC(1971, 3, 27), 2.77],
+      [Date.UTC(1971, 4,  4), 2.68],
+      [Date.UTC(1971, 4,  9), 2.56],
+      [Date.UTC(1971, 4, 14), 2.39],
+      [Date.UTC(1971, 4, 19), 2.3],
+      [Date.UTC(1971, 5,  4), 2],
+      [Date.UTC(1971, 5,  9), 1.85],
+      [Date.UTC(1971, 5, 14), 1.49],
+      [Date.UTC(1971, 5, 19), 1.27],
+      [Date.UTC(1971, 5, 24), 0.99],
+      [Date.UTC(1971, 5, 29), 0.67],
+      [Date.UTC(1971, 6,  3), 0.18],
+      [Date.UTC(1971, 6,  4), 0]
+    ]
+  }, {
+    name: "Winter 2015-2016",
+    data: [
+      [Date.UTC(1970, 10,  9), 0],
+      [Date.UTC(1970, 10, 15), 0.23],
+      [Date.UTC(1970, 10, 20), 0.25],
+      [Date.UTC(1970, 10, 25), 0.23],
+      [Date.UTC(1970, 10, 30), 0.39],
+      [Date.UTC(1970, 11,  5), 0.41],
+      [Date.UTC(1970, 11, 10), 0.59],
+      [Date.UTC(1970, 11, 15), 0.73],
+      [Date.UTC(1970, 11, 20), 0.41],
+      [Date.UTC(1970, 11, 25), 1.07],
+      [Date.UTC(1970, 11, 30), 0.88],
+      [Date.UTC(1971, 0,  5), 0.85],
+      [Date.UTC(1971, 0, 11), 0.89],
+      [Date.UTC(1971, 0, 17), 1.04],
+      [Date.UTC(1971, 0, 20), 1.02],
+      [Date.UTC(1971, 0, 25), 1.03],
+      [Date.UTC(1971, 0, 30), 1.39],
+      [Date.UTC(1971, 1,  5), 1.77],
+      [Date.UTC(1971, 1, 26), 2.12],
+      [Date.UTC(1971, 3, 19), 2.1],
+      [Date.UTC(1971, 4,  9), 1.7],
+      [Date.UTC(1971, 4, 29), 0.85],
+      [Date.UTC(1971, 5,  7), 0]
+    ]
+  }, {
+    name: "Winter 2016-2017",
+    data: [
+      [Date.UTC(1970, 9, 15), 0],
+      [Date.UTC(1970, 9, 31), 0.09],
+      [Date.UTC(1970, 10,  7), 0.17],
+      [Date.UTC(1970, 10, 10), 0.1],
+      [Date.UTC(1970, 11, 10), 0.1],
+      [Date.UTC(1970, 11, 13), 0.1],
+      [Date.UTC(1970, 11, 16), 0.11],
+      [Date.UTC(1970, 11, 19), 0.11],
+      [Date.UTC(1970, 11, 22), 0.08],
+      [Date.UTC(1970, 11, 25), 0.23],
+      [Date.UTC(1970, 11, 28), 0.37],
+      [Date.UTC(1971, 0, 16), 0.68],
+      [Date.UTC(1971, 0, 19), 0.55],
+      [Date.UTC(1971, 0, 22), 0.4],
+      [Date.UTC(1971, 0, 25), 0.4],
+      [Date.UTC(1971, 0, 28), 0.37],
+      [Date.UTC(1971, 0, 31), 0.43],
+      [Date.UTC(1971, 1,  4), 0.42],
+      [Date.UTC(1971, 1,  7), 0.39],
+      [Date.UTC(1971, 1, 10), 0.39],
+      [Date.UTC(1971, 1, 13), 0.39],
+      [Date.UTC(1971, 1, 16), 0.39],
+      [Date.UTC(1971, 1, 19), 0.35],
+      [Date.UTC(1971, 1, 22), 0.45],
+      [Date.UTC(1971, 1, 25), 0.62],
+      [Date.UTC(1971, 1, 28), 0.68],
+      [Date.UTC(1971, 2,  4), 0.68],
+      [Date.UTC(1971, 2,  7), 0.65],
+      [Date.UTC(1971, 2, 10), 0.65],
+      [Date.UTC(1971, 2, 13), 0.75],
+      [Date.UTC(1971, 2, 16), 0.86],
+      [Date.UTC(1971, 2, 19), 1.14],
+      [Date.UTC(1971, 2, 22), 1.2],
+      [Date.UTC(1971, 2, 25), 1.27],
+      [Date.UTC(1971, 2, 27), 1.12],
+      [Date.UTC(1971, 2, 30), 0.98],
+      [Date.UTC(1971, 3,  3), 0.85],
+      [Date.UTC(1971, 3,  6), 1.04],
+      [Date.UTC(1971, 3,  9), 0.92],
+      [Date.UTC(1971, 3, 12), 0.96],
+      [Date.UTC(1971, 3, 15), 0.94],
+      [Date.UTC(1971, 3, 18), 0.99],
+      [Date.UTC(1971, 3, 21), 0.96],
+      [Date.UTC(1971, 3, 24), 1.15],
+      [Date.UTC(1971, 3, 27), 1.18],
+      [Date.UTC(1971, 3, 30), 1.12],
+      [Date.UTC(1971, 4,  3), 1.06],
+      [Date.UTC(1971, 4,  6), 0.96],
+      [Date.UTC(1971, 4,  9), 0.87],
+      [Date.UTC(1971, 4, 12), 0.88],
+      [Date.UTC(1971, 4, 15), 0.79],
+      [Date.UTC(1971, 4, 18), 0.54],
+      [Date.UTC(1971, 4, 21), 0.34],
+      [Date.UTC(1971, 4, 25), 0]
+    ]
+}];
 
 // sets up formID 
 function setForm(formID) {
@@ -136,12 +256,12 @@ function stringifyProducts(productsArray) {
 	let productString = '';
 	for (let i = 0; productsArray[i]; i++){
 		if (i != 0) productString+= ', ';
-		productString += productsArray[i].name + '(' + productsArray[i].count + ')';
+		productString += productsArray[i].name + '(' + productsArray[i].y + ')';
 	}
 	return productString;
 }
-//given each submission's answer field, parses and extracts product name & count array
-function getProductCount(answer) {
+//given each submission's answer field, parses and extracts product name & count array, increments productData and adds the submission to productTimes
+function getProductCount(answer, time) {
 	let products = [];
 	for (let i = 0; answer[i]; i++) {
 		if (JSON.parse(answer[i]).name) {
@@ -150,24 +270,43 @@ function getProductCount(answer) {
 				count = parseFloat(JSON.parse(answer[i]).options[0].selected);
 			}
 			else count = 1;
-			var obj = {
+			let obj = {
 				name: JSON.parse(answer[i]).name,
-				count: count
+				y: count
 			}
 			products.push(obj);
+			let newArr = [time, count];
 			let found = 0;
 			for (let j = 0; productData[j]; j++) {
 				if (obj.name == productData[j].name) {
 					found = 1;
-					productData[j].count += count;
+					productData[j].y += count;
+					charter(productData);
+					for (let k = 0; productTimes[k]; k++) {
+						if (productTimes[k].name == obj.name) {
+							productTimes[k].data.push(newArr);
+							productTimes[k].data.sort((a,b) => a[0] > b[0]);
+							productLineCharter(productTimes);
+						}
+					}
 				}
 			}
+			// new array = [submissionTime, count]
+			
+			// if product is not in productData array, we create a new product object and push it.
 			if (!found) {
 				let newObj = {
 					name: JSON.parse(answer[i]).name,
-					count: count
+					y: count
 				} 
 				productData.push(newObj);
+				charter(productData);
+				let newSeriesObj = {
+					name: JSON.parse(answer[i]).name,
+					data: [newArr]
+				}
+				productTimes.push(newSeriesObj);
+				productLineCharter(productTimes);
 			}
 		}
 	}
@@ -176,7 +315,7 @@ function getProductCount(answer) {
 // creates an array with submission info then calls tableify for each submission
 function arrayify(answers, name, email, control) {
 	for (let i = 0; answers[i]; i++) {
-		let products = getProductCount(answers[i].answers[control].answer);
+		let products = getProductCount(answers[i].answers[control].answer, Date.parse(answers[i].created_at));
 		let obj = {
 			id: answers[i].id,
 			time: answers[i].created_at,
@@ -189,6 +328,7 @@ function arrayify(answers, name, email, control) {
 		t += JSON.parse(obj.payment.total);
 		submissions.push(obj);
 		timeArray.push([Date.parse(obj.time), parseFloat(obj.payment.total)]);
+
 
 	}
 	if (t != formInfo.total) editHeader(t);
@@ -234,10 +374,128 @@ function tableify(item) {
 	lineCharter(timeArray.sort((a,b) => a[0] > b[0]));
 }
 
+// decider function to chart the data as bar or pie
+function charter(data) {
+	if (data.length < 10) pieCharter(data);
+	else barCharter(data);
+}
 
+// creates the piechart of products
+function pieCharter(data){
+	var clear = document.querySelector('#product-chart');
+	clear.innerHTML = '';
+	var pieColors = (function () {
+	  	var colors = [];
+	    var base = '#fa8900';
+	    var i;
+		for (i = 0; i < data.length; i++) {
+		    colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+	  	}
+	  	return colors;
+	}());
 
+	Highcharts.chart('product-chart', {
+  		chart: {
+  			backgroundColor: '#212529',
+	    	plotBackgroundColor: '#212529',
+	    	plotBorderWidth: null,
+	    	plotShadow: false,
+	    	type: 'pie'
+  		},
+  		title: {
+    		text: 'products',
+    		style: { "color": "#ffffff" }
+  		},
+  		tooltip: {
+    		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+  		},
+  		plotOptions: {
+    		pie: {
+      			allowPointSelect: true,
+      			cursor: 'pointer',
+      			colors: pieColors,
+      			dataLabels: {
+        			enabled: true,
+        			format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+        			distance: -50,
+	        		filter: {
+	          			property: 'percentage',
+	          			operator: '>',
+	          			value: 3
+	        		}
+      			}
+    		}
+  		},
+	  	series: [{
+		    name: 'share',
+		    data: data,
+  		}]
+	});
+}
+
+// creates the barchart of products 
+function barCharter(data){
+	var clear = document.querySelector('#product-chart');
+	clear.innerHTML = '';
+	Highcharts.chart('product-chart', {
+  		chart: {
+    		type: 'bar',
+    		backgroundColor: '#212529',
+		    plotBackgroundColor: '#212529',
+		    colorAxis: { 
+		    	gridLineColor: '#eadbcc',
+		    	labels: { 
+		    		style: { "color": "#dddddd" }
+		    	}
+			}
+  		},
+  		title: {
+    		text: 'products',
+    		style: { "color": "#ffffff" }
+  		},
+  		plotOptions: {
+  			bar: {
+  				pointStart: 1
+  			}
+  		},
+ 		yAxis: {
+    		min: 0,
+    		title: {
+      			text: 'count'
+    		},
+    		gridLineColor: '#666666',
+    		allowDecimals: false
+  		},
+  		xAxis:{
+  			min: 1
+  		},
+  		legend: {
+    		enabled: false
+  		},
+  		tooltip: {
+    		pointFormat: 'count: <b>{point.y:.0f} </b>'
+  		},
+  		series: [{
+    		name: 'count',
+    		data: data,
+    		color: '#fa8900',
+    		dataLabels: {
+      			enabled: true,
+      			color: '#ffffff',
+      			align: 'right',
+      			format: '{point.name}', 
+      			y: 10, // 10 pixels down from the top
+      			style: {
+			        fontSize: '13px',
+			        fontFamily: 'Verdana, sans-serif'
+      			}
+    		}
+  		}]
+	});
+}
+
+// creates the linechart for payment/time graph 
 function lineCharter(data) {
-
     Highcharts.chart('line-chart', {
       	chart: {
 	        zoomType: 'x',
@@ -259,9 +517,11 @@ function lineCharter(data) {
         	style: { "color": "#cccccc" }
       	},
 	    xAxis: {
-	        type: 'datetime'
+	        type: 'datetime',
+	        gridLineColor: '#222222'
 	    },
 	    yAxis: {
+	    	gridLineColor: '#666666',
 	        title: {
 	          	text: 'payment amount',
 	          	style: { "color": "#cccccc" }
@@ -305,7 +565,65 @@ function lineCharter(data) {
     });
 }
 
-
+function productLineCharter(data) {
+	var clear = document.querySelector('#product-line-chart');
+	clear.innerHTML = '';
+	var lineColors = (function () {
+	  	var colors = [];
+	    var base = '#fa8900';
+	    var i;
+		for (i = 0; i < (data.length*2); i += 2) {
+		    colors.push(Highcharts.Color(base).brighten((i - 2) / 5).get());
+	  	}
+	  	return colors;
+	}());
+	Highcharts.chart('product-line-chart', {
+  		chart: {
+    		type: 'spline',
+    		zoomType: 'x',
+	        backgroundColor: '#212529',
+		    plotBackgroundColor: '#212529',
+		    colorAxis: { 
+		    	gridLineColor: '#eadbcc',
+		    	labels: { 
+		    		style: { "color": "#dddddd" }
+		    	}
+			}
+		},
+		title: {
+    		text: 'product purchases over time',
+    		style: { "color": "#ffffff" }
+  		},
+		xAxis: {
+			type: 'datetime',
+  		},
+  		yAxis: {
+    		title: {
+      			text: 'product count',
+      			style: { "color": "#cccccc" }
+    		},
+    		min: 0,
+    		gridLineColor: '#666666',
+    		allowDecimals: false
+  		},
+  		legend: {
+	        itemStyle: { "color": "#ffffff" }
+	    },
+  		tooltip: {
+    		headerFormat: '<b>{series.name}</b><br>',
+    		pointFormat: 'count: {point.y:.0f}'
+  		},
+  		plotOptions: {
+    		spline: {
+      			marker: {
+        			enabled: true
+      			}
+    		}
+  		},
+  		colors: lineColors,
+		series: JSON.parse(JSON.stringify(data))
+	});
+}
 
 
 
