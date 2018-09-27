@@ -11,6 +11,11 @@ body {
 	color: var(--main-text);
 }
 
+#logo {
+	padding-left: 50px;
+	padding-top: 25px;
+}
+
 #header {
 	margin-top: 40px;
 	color: var(--main-text);

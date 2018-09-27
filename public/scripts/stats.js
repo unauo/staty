@@ -255,7 +255,7 @@ function addFormToTable(form, total, currency) {
 // we need to fetch the payments for each form, while also fetching the currency of each. then we call addFormToTable() to add each form to html table.
 function getTotalEarned(form, qid) {
 	JF.getFormSubmissions(form[0], function(res){
-
+		if (!res[0]) return;
 		let grandTotal = 0.00;
 		let currency = JSON.parse(res[0].answers[qid].answer.paymentArray).currency;
 
@@ -280,13 +280,13 @@ function isPayment(form) {
 	if (form[2] == 'DELETED') return false;
 	let questions = [];
 	JF.getFormQuestions(form[0],function(res) {
-		questions = res;
-		for (var i=1; questions[i]; i++) {
+		questions = Object.keys(res).map(i => res[i]);
+		for (var i=0; questions[i]; i++) {
 			if (gateways.includes(questions[i].type)) {
 				form[3] = true;
 				form.push(questions[i].type);
 				form.push(questions[i].paymentType);
-				getTotalEarned(form, i);
+				getTotalEarned(form, questions[i].qid);
 				break;
 			}
 		}
@@ -307,7 +307,7 @@ function pieCharter(title, name, data, id){
 	    var base = '#fa8900';
 	    var i;
 		for (i = 0; i < data.length; i++) {
-		    colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+		    colors.push(Highcharts.Color(base).brighten((2*i - 3) / 7).get());
 	  	}
 	  	return colors;
 	}());
