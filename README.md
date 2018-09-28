@@ -4,7 +4,7 @@ Staty is an internship project for JotForm. It is a tool for users to see statis
 
 ## demo
 
-You can try Staty at [staty.duck2.lt](staty.duck2.lt).
+You can try Staty at [staty.duck2.lt](http://staty.duck2.lt).
 
 ## using npm
 
