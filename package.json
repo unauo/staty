@@ -5,7 +5,6 @@
   "description": "payment form statistic viewer for JotForm",
   "main": "app.js",
   "author": "unauo",
-  "license": "ISC",
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.3"
